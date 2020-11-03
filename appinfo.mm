@@ -21,6 +21,7 @@ NSMutableArray *apps;
 NSString *idToExecutable(char *bundle);
 NSString *idToPath(char *bundle);
 NSString *idToContainer(char *bundle);
+NSString *pidForProc(char *bundle);
 
 void pout(NSString *out)
 {
@@ -36,6 +37,8 @@ int main(int argc, char *argv[])
     NSObject* workspace = [LSApplicationWorkspace_class performSelector:selector];
     SEL selectorALL = NSSelectorFromString(@"allInstalledApplications");
 
+
+
     apps = [workspace performSelector:selectorALL];
 
     const char *output;
@@ -48,10 +51,21 @@ int main(int argc, char *argv[])
         output = [idToContainer(argv[2]) UTF8String];
     if (strncmp(argv[1], "-l", 2) == 0)
         output = [[apps description] UTF8String];
-
-    printf(output + '\n');
+    if (strncmp(argv[1], "-P", 2) == 0)
+        output = [pidForProc(argv[2]) UTF8String];
+    
+    printf(output);
+    printf("\n");
 }
 
+NSString *pidForProc(char *bundle)
+{
+    int pid;
+    FILE *fp = popen([[NSString stringWithFormat:@"%s%@%s", "ps aux | grep ", idToPath(bundle), " | xargs | cut -d ' ' -f 2"] UTF8String], "r");
+    fscanf(fp, "%d", &pid);
+    pclose(fp);
+    return [NSString stringWithFormat:@"%d", pid];
+}
 
 NSString *idToExecutable(char *bundle)
 {
