@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
         output = [idToPath(argv[2]) UTF8String];
     if (strncmp(argv[1], "-c", 2) == 0)
         output = [idToContainer(argv[2]) UTF8String];
+    if (strncmp(argv[1], "-l", 2) == 0)
+        output = [[apps description] UTF8String];
 
     printf(output);
 }
