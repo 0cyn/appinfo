@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     if (strncmp(argv[1], "-l", 2) == 0)
         output = [[apps description] UTF8String];
 
-    printf(output);
+    printf(output + '\n');
 }
 
 
