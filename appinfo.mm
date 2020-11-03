@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 NSString *pidForProc(char *bundle)
 {
     int pid;
-    FILE *fp = popen([[NSString stringWithFormat:@"%s%@%s", "ps aux | grep ", idToPath(bundle), " | xargs | cut -d ' ' -f 2"] UTF8String], "r");
+    FILE *fp = popen([[NSString stringWithFormat:@"%s%@%s", "ps aux | grep ", idToPath(bundle), " | grep -v grep | xargs | cut -d ' ' -f 2"] UTF8String], "r");
     fscanf(fp, "%d", &pid);
     pclose(fp);
     return [NSString stringWithFormat:@"%d", pid];
